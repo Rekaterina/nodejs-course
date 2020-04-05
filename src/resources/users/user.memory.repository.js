@@ -18,7 +18,8 @@ const updateUser = async (id, data) => {
 };
 
 const deleteUser = async (id) => {
-  return users.filter(user => user.id === id);
+  const deletedIndex = users.findIndex(user => user.id === id);
+  return users.splice(deletedIndex, 1);
 };
 
 module.exports = { 
