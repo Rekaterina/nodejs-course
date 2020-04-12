@@ -2,23 +2,25 @@ const router = require('express').Router();
 const Task = require('./task.model');
 const tasksService = require('./task.service');
 
-router.route('/:boardId/tasks').get(async (req, res) => {
+router.route('/:boardId/tasks').get(async (req, res, next) => {
+  try {
   const tasks = await tasksService.getAll(req.params.boardId);
   res.json(tasks);
+} catch (err) {
+    return next(err);
+  }
 });
 
-router.route('/:boardId/tasks/:id').get(async (req, res) => {
+router.route('/:boardId/tasks/:id').get(async (req, res, next) => {
   try {
     const task = await tasksService.getTask(req.params.boardId, req.params.id);
     res.json(Task.toResponse(task));
   } catch (err) {
-    console.log(err);
-    res.status(404);
-    res.end('Task not found');
-  }
+      return next(err);
+    }
 });
 
-router.route('/:boardId/tasks').post(async (req, res) => {
+router.route('/:boardId/tasks').post(async (req, res, next) => {
   try {
     const newTask = await tasksService.createTask(
       new Task(req.body),
@@ -26,13 +28,11 @@ router.route('/:boardId/tasks').post(async (req, res) => {
     );
     res.json(Task.toResponse(newTask));
   } catch (err) {
-    console.log(err);
-    res.status(400);
-    res.end('Bad request');
-  }
+      return next(err);
+    }  
 });
 
-router.route('/:boardId/tasks/:id').put(async (req, res) => {
+router.route('/:boardId/tasks/:id').put(async (req, res, next) => {
   try {
     const updatedTask = await tasksService.updateTask(
       req.params.boardId,
@@ -41,22 +41,18 @@ router.route('/:boardId/tasks/:id').put(async (req, res) => {
     );
     res.json(Task.toResponse(updatedTask));
   } catch (err) {
-    console.log(err);
-    res.status(400);
-    res.end('Bad request');
-  }
+      return next(err);
+    }
 });
 
-router.route('/:boardId/tasks/:id').delete(async (req, res) => {
+router.route('/:boardId/tasks/:id').delete(async (req, res, next) => {
   try {
     await tasksService.deleteTask(req.params.boardId, req.params.id);
     res.json();
     res.status(204);
   } catch (err) {
-    console.log(err);
-    res.status(404);
-    res.end('Task not found');
-  }
+      return next(err);
+    }
 });
 
 module.exports = router;

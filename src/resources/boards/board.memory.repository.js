@@ -1,3 +1,5 @@
+const { ValidationError } = require('../../middleware/errorHandler');
+
 let boards = [];
 
 const getAll = async () => {
@@ -9,17 +11,30 @@ const createBoard = async (board) => {
 };
 
 const getBoard = async (id) => {
-  return boards.find(board => board.id === id);
+  const findBoard = boards.find(board => board.id === id);
+  if (!findBoard) {
+    throw new ValidationError();
+  } else {
+    return findBoard;
+  }
 };
 
 const updateBoard = async (id, data) => {
   const updatedIndex = boards.findIndex(board => board.id === id);
-  return boards[updatedIndex] = { ...boards[updatedIndex], ...data };
+  if (!updatedIndex) {
+    throw new ValidationError();
+  } else {
+    return boards[updatedIndex] = { ...boards[updatedIndex], ...data };
+  }
 };
 
 const deleteBoard = async (id) => {
   const deletedIndex = boards.findIndex(board => board.id === id);
-  return boards.splice(deletedIndex, 1);
+  if (!deletedIndex) {
+    throw new ValidationError();
+  } else {
+    return boards.splice(deletedIndex, 1);
+  }
 };
 
 module.exports = { 

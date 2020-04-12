@@ -1,3 +1,5 @@
+const { ValidationError } = require('../../middleware/errorHandler');
+
 let tasks = [];
 
 const getAll = async () => {
@@ -11,21 +13,34 @@ const createTask = async (task, boardId) => {
 };
 
 const getTask = async (boardId, id) => {
-  return tasks.find(task => task.boardId === boardId && task.id === id);
+  const findTask = tasks.find(task => task.boardId === boardId && task.id === id);
+  if (!findTask) {
+    throw new ValidationError();
+  } else {
+    return findTask;
+  }
 };
 
 const updateTask = async (boardId, id, data) => {
   const updatedIndex = tasks.findIndex(
     task => task.boardId === boardId && task.id === id
   );
-  return (tasks[updatedIndex] = { ...tasks[updatedIndex], ...data });
+  if (!updatedIndex) {
+    throw new ValidationError();
+  } else {
+    return (tasks[updatedIndex] = { ...tasks[updatedIndex], ...data });
+  }
 };
 
 const deleteTask = async (boardId, id) => {
   const deletedIndex = tasks.findIndex(
     task => task.boardId === boardId && task.id === id
   );
-  return tasks.splice(deletedIndex, 1);
+  if (!deletedIndex) {
+    throw new ValidationError();
+  } else {
+    return tasks.splice(deletedIndex, 1);
+  }
 };
 
 const deleteTasksOnBoard = async boardId => {

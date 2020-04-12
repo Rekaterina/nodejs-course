@@ -1,3 +1,5 @@
+const { ValidationError } = require('../../middleware/errorHandler');
+
 let users = [];
 
 const getAll = async () => {
@@ -9,17 +11,30 @@ const createUser = async (user) => {
 };
 
 const getUser = async (id) => {
-  return users.find(user => user.id === id);
+  const findUser = users.find(user => user.id === id);
+  if (!findUser) {
+    throw new ValidationError();
+  } else {
+    return findUser;
+  }
 };
 
 const updateUser = async (id, data) => {
   const updatedIndex = users.findIndex(user => user.id === id);
-  return users[updatedIndex] = { ...users[updatedIndex], ...data };
+  if (!updatedIndex) {
+    throw new ValidationError();
+  } else {
+    return users[updatedIndex] = { ...users[updatedIndex], ...data };
+  }
 };
 
 const deleteUser = async (id) => {
   const deletedIndex = users.findIndex(user => user.id === id);
-  return users.splice(deletedIndex, 1);
+  if (!deletedIndex) {
+    throw new ValidationError();
+  } else {
+    return users.splice(deletedIndex, 1);
+  }
 };
 
 module.exports = { 
