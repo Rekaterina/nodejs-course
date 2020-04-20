@@ -4,9 +4,9 @@ const tasksService = require('./task.service');
 
 router.route('/:boardId/tasks').get(async (req, res, next) => {
   try {
-  const tasks = await tasksService.getAll(req.params.boardId);
-  res.json(tasks);
-} catch (err) {
+    const tasks = await tasksService.getAll(req.params.boardId);
+    res.json(tasks);
+  } catch (err) {
     return next(err);
   }
 });
@@ -16,20 +16,20 @@ router.route('/:boardId/tasks/:id').get(async (req, res, next) => {
     const task = await tasksService.getTask(req.params.boardId, req.params.id);
     res.json(Task.toResponse(task));
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 router.route('/:boardId/tasks').post(async (req, res, next) => {
   try {
     const newTask = await tasksService.createTask(
-      new Task(req.body),
+      req.body,
       req.params.boardId
     );
     res.json(Task.toResponse(newTask));
   } catch (err) {
-      return next(err);
-    }  
+    return next(err);
+  }
 });
 
 router.route('/:boardId/tasks/:id').put(async (req, res, next) => {
@@ -41,8 +41,8 @@ router.route('/:boardId/tasks/:id').put(async (req, res, next) => {
     );
     res.json(Task.toResponse(updatedTask));
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 router.route('/:boardId/tasks/:id').delete(async (req, res, next) => {
@@ -51,8 +51,8 @@ router.route('/:boardId/tasks/:id').delete(async (req, res, next) => {
     res.json();
     res.status(204);
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 module.exports = router;

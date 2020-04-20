@@ -1,13 +1,14 @@
 const router = require('express').Router();
 const Board = require('./board.model');
 const boardsService = require('./board.service');
+const { ValidationError } = require('../../middleware/errorHandler');
 
 router.route('/').get(async (req, res, next) => {
   try {
-  const boards = await boardsService.getAll();
-  res.json(boards.map(Board.toResponse));
+    const boards = await boardsService.getAll();
+    res.json(boards.map(Board.toResponse));
   } catch (err) {
-      return next(err);
+    return next(err);
   }
 });
 
@@ -16,8 +17,8 @@ router.route('/:id').get(async (req, res, next) => {
     const board = await boardsService.getBoard(req.params.id);
     res.json(Board.toResponse(board));
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 router.route('/').post(async (req, res, next) => {
@@ -26,17 +27,20 @@ router.route('/').post(async (req, res, next) => {
     await boardsService.createBoard(newBoard);
     res.json(Board.toResponse(newBoard));
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 router.route('/:id').put(async (req, res, next) => {
   try {
-    const updatedBoard = await boardsService.updateBoard(req.params.id, req.body);
+    const updatedBoard = await boardsService.updateBoard(
+       req.body,
+       req.params.id
+    );
     res.json(Board.toResponse(updatedBoard));
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 router.route('/:id').delete(async (req, res, next) => {
@@ -45,8 +49,8 @@ router.route('/:id').delete(async (req, res, next) => {
     res.json();
     res.status(204);
   } catch (err) {
-      return next(err);
-    }
+    return next(err);
+  }
 });
 
 module.exports = router;
