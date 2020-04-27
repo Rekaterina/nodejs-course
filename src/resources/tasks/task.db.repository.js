@@ -33,5 +33,7 @@ module.exports = {
   getTask,
   createTask,
   updateTask,
-  deleteTask
+  deleteTask,
+  deleteTasksOnBoard,
+  setTaskUserIdToNull
 };

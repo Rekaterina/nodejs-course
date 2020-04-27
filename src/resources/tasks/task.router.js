@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Task = require('./task.model');
 const tasksService = require('./task.service');
+const { ValidationError } = require('../../middleware/errorHandler');
 
 router.route('/:boardId/tasks').get(async (req, res, next) => {
   try {
@@ -14,7 +15,11 @@ router.route('/:boardId/tasks').get(async (req, res, next) => {
 router.route('/:boardId/tasks/:id').get(async (req, res, next) => {
   try {
     const task = await tasksService.getTask(req.params.boardId, req.params.id);
-    res.json(Task.toResponse(task));
+    if (task) {
+      res.json(Task.toResponse(task));
+    } else {
+      throw new ValidationError(404, 'Not found');
+    }
   } catch (err) {
     return next(err);
   }

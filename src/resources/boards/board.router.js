@@ -15,7 +15,10 @@ router.route('/').get(async (req, res, next) => {
 router.route('/:id').get(async (req, res, next) => {
   try {
     const board = await boardsService.getBoard(req.params.id);
-    res.json(Board.toResponse(board));
+    if (board) {
+      res.json(Board.toResponse(board));
+    }
+    throw new ValidationError(404, 'Not found');
   } catch (err) {
     return next(err);
   }

@@ -6,8 +6,9 @@ const getUser = id => usersRepo.getUser(id);
 const createUser = user => usersRepo.createUser(user);
 const updateUser = (data, id) => usersRepo.updateUser({ ...data, id });
 const deleteUser = async id => {
+  await tasksService.setTaskUserIdToNull(id);
   await usersRepo.deleteUser(id);
-  //tasksService.setTaskUserIdToNull(id);
+  
 };
 
 module.exports = {

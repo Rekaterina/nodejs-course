@@ -6,8 +6,8 @@ const getBoard = id => boardsRepo.getBoard(id);
 const createBoard = board => boardsRepo.createBoard(board);
 const updateBoard = (data, id) => boardsRepo.updateBoard(data, id);
 const deleteBoard = id => {
+  tasksService.deleteTasksOnBoard(id);
   boardsRepo.deleteBoard(id);
-  //tasksService.deleteTasksOnBoard(id);
 };
 
 module.exports = {
