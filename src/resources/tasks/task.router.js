@@ -31,7 +31,11 @@ router.route('/:boardId/tasks').post(async (req, res, next) => {
       req.body,
       req.params.boardId
     );
-    res.json(Task.toResponse(newTask));
+    if (newTask) {
+      res.json(Task.toResponse(newTask));
+    } else {
+      throw new ValidationError(404, 'Not found');
+    }
   } catch (err) {
     return next(err);
   }
@@ -44,7 +48,11 @@ router.route('/:boardId/tasks/:id').put(async (req, res, next) => {
       req.params.id,
       req.body
     );
-    res.json(Task.toResponse(updatedTask));
+    if (updatedTask) {
+      res.json(Task.toResponse(updatedTask));
+    } else {
+      throw new ValidationError(404, 'Not found');
+    }
   } catch (err) {
     return next(err);
   }
